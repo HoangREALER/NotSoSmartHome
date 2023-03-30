@@ -35,7 +35,7 @@ const HomeHeader = () => {
                     name="Rakim Mayer"
                     src={avatar}
                     size={54}
-                    borderRadius={0}
+                    borderRadius={27}
                 />
                 <View style={{
                     backgroundColor: 'green',
