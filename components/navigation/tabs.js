@@ -28,7 +28,7 @@ const TabBarCustomButton = ({ addButton, children, onPress }) => {
 
     if (isSelected) {
         return (
-            <View style={{ flex: 1, alignItems: "center", elevation: 24 }}>
+            <View style={{ flex: 1, alignItems: "center", elevation: 10 }}>
                 <View style={{ flexDirection: 'row', position: 'absolute', top: 0 }}>
                     <View style={{ flex: 1, backgroundColor: COLORS_Light.background }}></View>
                     <Svg
@@ -54,7 +54,7 @@ const TabBarCustomButton = ({ addButton, children, onPress }) => {
                         borderRadius: 27.5,
                         backgroundColor: COLORS_Light.primary,
                         shadowColor: COLORS_Light.primary,
-                        elevation: 24
+                        elevation: 3
                     }}
                     onPress={onPress}
                 >
