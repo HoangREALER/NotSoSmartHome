@@ -1,15 +1,13 @@
 import React from "react";
-import { SafeAreaView, StyleSheet } from "react-native";
+import { SafeAreaView, StyleSheet, Text } from "react-native";
 import { COLORS_Light } from "../constants";
 import { HomeHeader, EnergyUsage } from "../components";
 import { Text } from "react-native";
-
 const Home = () => {
     return (
         <SafeAreaView style={styles.container}>
             <Text>hello</Text>
             <HomeHeader/>
-            <EnergyUsage/>
         </SafeAreaView>
     )
 }
