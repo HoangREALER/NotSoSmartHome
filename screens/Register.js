@@ -5,29 +5,19 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import appTheme from "../constants/theme";
 import { login_vector1, login_vector2 } from "../constants/images";
 
-const Login = ({navigation}) => {
+const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
-    const handleLogin = () => {
+    const handleCreateAccount = () => {
         //navigate to home screen
-        if (username == "hoangle123" && password == "hoangle123")
-            navigation.navigate("Home")
     }
 
-    const forgotPassword = () => {
-        //navigate to forgot password screen
-        navigation.navigate("ForgotPassword")
-    }
-
-    const register = () => {
-        //navigate to register screen
-        navigation.navigate("Register")
-    }
     return (
         <View style={styles.container}>
-            <Text style={styles.logo}>Hello</Text>
-                <Text style={styles.normalText}>Sign in to your account</Text>
+            <Text style={styles.logo}>Register</Text>
+                <Text style={styles.normalText}>Create yout account</Text>
             <View style={styles.inputView}>
                 <TextInput
                     style={styles.inputText}
@@ -46,17 +36,20 @@ const Login = ({navigation}) => {
                 />
             </View>
 
-            <TouchableOpacity onpress={forgotPassword}>
-                <Text stile={styles.normalText}>Forgot your password?</Text>
+            <View style={styles.inputView}>
+                <TextInput
+                    style={styles.inputText}
+                    placeholder="Confirm password"
+                    placeholderTextColor="#003f5c"
+                    secureTextEntry={true}
+                    onChangeText={text => setConfirmPassword(text)}
+                />
+            </View>
+
+            <TouchableOpacity style={styles.loginBtn} onPress={handleCreateAccount}>
+                <Text style={styles.loginText}>Create account</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.loginBtn} onPress={handleLogin}>
-                <Text style={styles.loginText}>LOGIN</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={register}>
-                <Text style={styles.normalText}>Don't have an account? Create</Text>
-            </TouchableOpacity>
         </View>
     );
 };
@@ -107,4 +100,4 @@ const styles = StyleSheet.create({
       },
 });
 
-export default Login;
+export default Register;
