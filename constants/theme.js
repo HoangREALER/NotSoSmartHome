@@ -7,10 +7,10 @@ export const COLORS_Light = {
     lightBlue: "#D2E0EE",
     pink: "#F7759C",
     green: "#30a04b",
-    repeat1: "49.47%", // For gradient
+    repeat1: 0.5, // For gradient
     pink2: "#FF6BA1",
-    repeat2: "95.75%",
-    angle: "269.39deg",
+    repeat2: 0.96,
+    angle: 269.39,
     yellow: "#FAE297",
 
     //colors:
@@ -31,7 +31,7 @@ export const SIZES = {
     font: 14,
     radius: 30,
     padding: 10,
-    padding2: 12,
+    padding2: 16,
 
 
     // font sizes
