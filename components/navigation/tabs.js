@@ -56,7 +56,7 @@ const TabBarCustomButton = ({ accessibilityState, children, onPress }) => {
             <TouchableOpacity
                 style={{
                     flex: 1,
-                    height: 50,
+                    height: 60,
                     backgroundColor: COLORS_Light.white
                 }}
                 activeOpacity={1}
@@ -101,10 +101,10 @@ const Tabs = () => {
                     left: 0,
                     bottom: 0,
                     right: 0,
-                    height: 50,
+                    height: 60,
                     borderTopWidth: 0,
                     backgroundColor: "transparent",
-                    elevation: 15
+                    ...styles.shadow
                 },
                 tabBarShowLabel: false,
                 headerShown: false
@@ -289,7 +289,17 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-    }
+    },
+    shadow: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+        elevation: 15,
+    },
 })
 
 export default Tabs;
