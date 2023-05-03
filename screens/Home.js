@@ -1,16 +1,20 @@
 import React from "react";
-import { SafeAreaView, StyleSheet } from "react-native";
+import { SafeAreaView, StyleSheet, View, Text } from "react-native";
 import { COLORS_Light } from "../constants";
-import { HomeHeader, EnergyUsage } from "../components";
-import { Text } from "react-native";
+import { EnergyUsage } from "../components";
+import { SubHeader, HomeHeader } from "../components/header";
+
+
 
 const Home = () => {
     return (
         <SafeAreaView style={styles.container}>
             <Text>hello</Text>
+
             <HomeHeader/>
             <EnergyUsage/>
         </SafeAreaView>
+
     )
 }
 
