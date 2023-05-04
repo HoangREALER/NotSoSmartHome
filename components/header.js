@@ -7,6 +7,7 @@ import { SIZES } from "../constants";
 // Change this later
 const avatar = "https://raw.githubusercontent.com/HoangREALER/NotSoSmartHome/main/assets/images/avatar.png"
 
+
 const HomeHeader = () => {
     return (
         <View style={{ display: "flex", flexDirection: "row", height: 72 }}>
