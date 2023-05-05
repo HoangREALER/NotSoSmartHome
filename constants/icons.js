@@ -14,6 +14,7 @@ export const schedule_focused = require("../assets/icons/schedule_focused.png")
 export const setting_focused = require("../assets/icons/setting_focused.png")
 export const temp = require("../assets/icons/temp.png")
 export const water = require("../assets/icons/water.png")
+export const music = require("../assets/icons/music.png")
 
 export default {
     arrow_up_focused,
@@ -32,4 +33,5 @@ export default {
     setting_focused,
     temp,
     water,
+    music
 }
