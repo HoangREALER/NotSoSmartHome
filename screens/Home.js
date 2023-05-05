@@ -1,15 +1,16 @@
 import React from "react";
-import { SafeAreaView, StyleSheet } from "react-native";
+import { SafeAreaView, ScrollView, StyleSheet, Text } from "react-native";
 import { COLORS_Light } from "../constants";
-import { HomeHeader, EnergyUsage } from "../components";
-import { Text } from "react-native";
+import { HomeHeader, EnergyUsage, HomeBody } from "../components/home";
 
 const Home = () => {
     return (
         <SafeAreaView style={styles.container}>
-            <Text>hello</Text>
-            <HomeHeader/>
-            <EnergyUsage/>
+            <ScrollView>
+                <HomeHeader />
+                <EnergyUsage />
+                <HomeBody />
+            </ScrollView>
         </SafeAreaView>
     )
 }
@@ -26,7 +27,7 @@ const styles = StyleSheet.create({
             height: 3,
         },
         shadowOpacity: 0.1,
-        shadowOffset: 3,
+        shadowRadius: 3,
         elevation: 1,
     },
 
