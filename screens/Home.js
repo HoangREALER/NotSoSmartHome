@@ -5,10 +5,12 @@ import { EnergyUsage } from "../components";
 import { SubHeader, HomeHeader } from "../components/header";
 import { arrow_up_focused, lamp, not_favourite, plus_focused, water } from "../constants/icons";
 import Slider from "@react-native-community/slider";
-
-
-
+import ColorPicker from "react-native-wheel-color-picker";
 const Home = () => {
+
+    const [color, setColor] = useState('#000000');
+
+    
     // Switch Use state
     const [isEnable, setIsEnable] = useState(true);
 
@@ -16,11 +18,11 @@ const Home = () => {
         setIsEnable(previousState => !previousState)
     }
 
-    // Circular Slider
-    const [temperature, setTemperature] = useState(18);
+    /// Slider Use state
+    const [lightLevel, setLightLevel] = useState(0);
 
     const onValueChange = value => {
-        setTemperature(value);
+        setLightLevel(value);
     }
 
     return (
@@ -30,7 +32,6 @@ const Home = () => {
         //     <HomeHeader/>
         //     <EnergyUsage/>
         // </SafeAreaView>
-
         <ScrollView style={styles.container}>
             
             <View style={styles.header}>
@@ -45,15 +46,15 @@ const Home = () => {
                         flex: 1,
                         alignItems:'center',
                         justifyContent: 'center'}}>
-                    <Text style={FONTS.h2}>Next to the sofa</Text>
+                    <Text style={FONTS.h2}>By the bed</Text>
                     <Text style={FONTS.b5}>Consumes 1KWh</Text>
                 </View>
                 <TouchableOpacity style={{}}>
                     <Image source={not_favourite}/>
                 </TouchableOpacity>
+
             </View>
 
-            {/* Slider */}
             <View style={{alignSelf:'center'}}>
                 <Switch
                     trackColor={{false: 'gray', true:COLORS_Light.pink}}
@@ -62,99 +63,48 @@ const Home = () => {
                     value={isEnable}
                 />
             </View>
+
+            {/* Color Picker */}
+            <View style={[]}>
+				<ColorPicker
+					ref={r => { this.picker = r }}
+					color={this.state.currentColor}
+					swatchesOnly={this.state.swatchesOnly}
+					onColorChange={this.onColorChange}
+					onColorChangeComplete={this.onColorChangeComplete}
+					thumbSize={40}
+					sliderSize={40}
+					noSnap={true}
+					row={false}
+					swatchesLast={this.state.swatchesLast}
+					swatches={this.state.swatchesEnabled}
+					discrete={this.state.disc}
+				/>
+				<SomeButton onPress={() => this.picker.revert()} />
+			</View>
+
+
+            {/* Color Slider */}
             <View style={styles.box}>
+                <Text style={{alignSelf:"center"}}>0%</Text>
                 <Slider
                     style={styles.slider}
-                    minimumValue={18}
-                    maximumValue={30}
+                    minimumValue={0}
+                    maximumValue={100}
                     minimumTrackTintColor= "#D2E0EE"
                     maximumTrackTintColor="#CCCCCC"
                     thumbTintColor="#75A7F7"
                     step={1}
-                    value={temperature}
+                    value={lightLevel}
                     onValueChange={onValueChange}
                 />
-                <Text> Temp: {temperature} </Text>
-            </View>
-            {/* Mode */}
-            <View style={styles.box}>
-                <View>
-                    <Text style={FONTS.h3}>Mode</Text>
-                </View>
-                <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity style={styles.mode_wrapper}>
-                        <Image source={water}/>
-                        <Text>Dry</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.mode_wrapper}>
-                        <Image source={water}/>
-                        <Text>Cold</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.mode_wrapper}>
-                        <Image source={water}/>
-                        <Text>Fan</Text>
-                    </TouchableOpacity>
-                </View>
+                <Text style={{alignSelf:"center"}}>100%</Text>
             </View>
 
-            {/* Timer */}
-            <View style={styles.box}>
 
-                <View>
-                    <Text style={FONTS.h3}>Timer</Text>
-                </View>
-
-                <TouchableOpacity style={{alignSelf: 'flex-end'}}>
-                    <Image source={plus_focused}/>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.timer_wrapper}>
-                    <View style={{alignSelf: 'flex-start', marginHorizontal:5,}}>
-                        <Text style={FONTS.h1}>15:30</Text>
-                        <Text style={FONTS.body4}>Turn off after __ . __</Text>
-                    </View>
-                    <Switch
-                        style={{alignSelf: 'flex-end'}}
-                        trackColor={{false: 'gray', true:COLORS_Light.pink}}
-                        thumbColor={isEnable? 'white': 'white'}
-                        onValueChange={toggleSwitch}
-                        value={isEnable}r
-                    />
-                </TouchableOpacity>
-
-                
-                <TouchableOpacity style={styles.timer_wrapper}>
-                    <View style={{alignSelf: 'flex-start', marginHorizontal:5,}}>
-                        <Text style={FONTS.h1}>15:30</Text>
-                        <Text style={FONTS.body4}>Turn off after __ . __</Text>
-                    </View>
-                    <Switch
-                        style={{alignSelf: 'flex-end'}}
-                        trackColor={{false: 'gray', true:COLORS_Light.pink}}
-                        thumbColor={isEnable? 'white': 'white'}
-                        onValueChange={toggleSwitch}
-                        value={isEnable}r
-                    />
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.timer_wrapper}>
-                    <View style={{alignSelf: 'flex-start', marginHorizontal:5,}}>
-                        <Text style={FONTS.h1}>15:30</Text>
-                        <Text style={FONTS.body4}>Turn off after __ . __</Text>
-                    </View>
-                    <Switch
-                        style={{alignSelf: 'flex-end'}}
-                        trackColor={{false: 'gray', true:COLORS_Light.pink}}
-                        thumbColor={isEnable? 'white': 'white'}
-                        onValueChange={toggleSwitch}
-                        value={isEnable}r
-                    />
-                </TouchableOpacity>
-
-            </View>
         </ScrollView>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -184,48 +134,9 @@ const styles = StyleSheet.create({
         borderRadius:20,
         marginHorizontal: 20,
         marginVertical: 20,
-
+        flexDirection: 'row',
     },
-    mode_wrapper: {
-        flex: 1,
-        padding: 20,
-        backgroundColor: '#ffffff', // change this to your desired background color
-        shadowColor: '#000',
-        shadowOffset: {
-          width: 0,
-          height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
 
-        borderRadius:20,
-        marginHorizontal: 10,
-        marginVertical: 5,
-
-        alignItems:'center',
-        justifyContent: 'center'
-    },
-    timer_wrapper: {
-        flex: 1,
-        padding: 20,
-        backgroundColor: '#ffffff', // change this to your desired background color
-        shadowColor: '#000',
-        shadowOffset: {
-          width: 0,
-          height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-
-        borderRadius:20,
-        marginHorizontal: 10,
-        marginVertical: 5,
-
-        alignItems:'center',
-        justifyContent: 'center'
-    },
     wrapper: {
         flex: 1,
         padding: 20,
@@ -245,6 +156,14 @@ const styles = StyleSheet.create({
 
         alignItems:'center',
         justifyContent: 'center'
+    },
+
+    colorPicker: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 10,
+        marginBottom: 20
     },
 
     shadow: {
