@@ -233,6 +233,7 @@ const HomeBody = () => {
                     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
                     const duration = item.duration
                     const progressInterval = useRef(null);
+                    const [playing, setPlaying] = useState(true);
                     const [progress, setProgress] = useState(0)
 
                     const onValueChange = value => {
@@ -246,26 +247,45 @@ const HomeBody = () => {
                     }
 
                     function play() {
-                        progressInterval.current = setInterval(() => setProgress((old) => old + 1), 1000);
+                        setPlaying(true);
                     }
 
                     function pause() {
-                        clearInterval(progressInterval);
+                        setPlaying(false);
                     }
-                    
-                    useEffect(() => {
-                        progressInterval.current = setInterval(() => setProgress((old) => old + 1), 1000);
-                        return () => {
-                          clearInterval(progressInterval); //when user exits, clear this interval.
-                        };
-                      }, []);
 
-                      useEffect(() => {
-                        if (progress >= duration) {
-                          setCount(duration);
-                          clearInterval(progressInterval);
+                    function handlePlayButton() {
+                        if (playing) {
+                            pause()
+                        } else {
+                            play()
                         }
-                      }, [progress]);
+                    }
+
+                    useEffect(() => {
+                        return () => {
+                            clearInterval(progressInterval); //when user exits, clear this interval.
+                        };
+                    }, []);
+
+                    useEffect(() => {
+                        if (progress >= duration) {
+                            setProgress(duration);
+                            clearInterval(progressInterval);
+                        }
+                    }, [progress]);
+
+                    useEffect(() => {
+                        if (playing) {
+                            progressInterval.current = setInterval(
+                                () => setProgress((old) => old + 1),
+                                1000
+                            );
+                        } else {
+                            clearInterval(progressInterval.current);
+                            progressInterval.current = null;
+                        }
+                    }, [playing]);
 
                     return (
                         <View style={{ flexDirection: "column" }}>
@@ -318,7 +338,7 @@ const HomeBody = () => {
                                 </View>
                             </View>
 
-                            
+
                             <View style={{ paddingTop: SIZES.padding * 2 }}>
                                 <Text style={{ ...FONTS.h4 }}>{item.song}</Text>
                                 <Text style={{ ...FONTS.h5 }}>{item.artist}</Text>
@@ -358,13 +378,75 @@ const HomeBody = () => {
                             <View style={{ flexDirection: 'row' }}>
                                 <View style={{ flexDirection: "row", alignItems: "flex-end", justifyContent: "space-between", flex: 1 }}>
                                     <View style={{
-                                        paddingHorizontal: SIZES.padding2,
                                         justifyContent: 'center',
-                                        height: 30,
-                                        borderRadius: 32,
-                                        backgroundColor: COLORS_Light.lightConstrast2
+                                        flexDirection: 'row',
+                                        gap: SIZES.padding
                                     }}>
-                                        <Text style={{ ...FONTS.h5 }}>{rooms[item.room_id].name}</Text>
+                                        <TouchableOpacity style={{
+                                            width: 30,
+                                            height: 30,
+                                        }}>
+                                            <MaskedView
+                                                style={styles.maskedView}
+                                                maskElement={
+                                                    <View style={styles.maskWrapper}>
+                                                        <Image
+                                                            source={icons.forward}
+                                                            resizeMode="contain"
+                                                            style={{
+                                                                height: 30,
+                                                                transform: "rotate(180deg)"
+                                                            }}
+                                                        />
+                                                    </View>
+                                                }
+                                            >
+                                                <View style={{ ...styles.mask, backgroundColor: COLORS_Light.lightConstrast }}></View>
+                                            </MaskedView>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={{
+                                            width: 30,
+                                            height: 30,
+                                        }}
+                                            onPress={() => handlePlayButton()}>
+                                            <MaskedView
+                                                style={styles.maskedView}
+                                                maskElement={
+                                                    <View style={styles.maskWrapper}>
+                                                        <Image
+                                                            source={playing ? icons.pause : icons.play}
+                                                            resizeMode="contain"
+                                                            style={{
+                                                                height: 30,
+                                                            }}
+                                                        />
+                                                    </View>
+                                                }
+                                            >
+                                                <View style={{ ...styles.mask, backgroundColor: COLORS_Light.lightConstrast }}></View>
+                                            </MaskedView>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={{
+                                            width: 30,
+                                            height: 30,
+                                        }}>
+                                            <MaskedView
+                                                style={styles.maskedView}
+                                                maskElement={
+                                                    <View style={styles.maskWrapper}>
+                                                        <Image
+                                                            source={icons.forward}
+                                                            resizeMode="contain"
+                                                            style={{
+                                                                height: 30,
+                                                            }}
+                                                        />
+                                                    </View>
+                                                }
+                                            >
+                                                <View style={{ ...styles.mask, backgroundColor: COLORS_Light.lightConstrast }}></View>
+                                            </MaskedView>
+                                        </TouchableOpacity>
                                     </View>
 
 
