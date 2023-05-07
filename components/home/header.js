@@ -7,6 +7,7 @@ import { SIZES, } from "../../constants";
 // Change this later
 const avatar = images.avatar
 
+
 const HomeHeader = () => {
     return (
         <View style={{ display: "flex", flexDirection: "row", height: 72 }}>
