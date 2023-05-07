@@ -7,7 +7,7 @@ const device = [
         state: 1, // 1 for on, 0 for off
         capacity: 80, // percent
         room_id: 3,
-        type: 0, // 0 for light, 1 for lamp, 2 for music device
+        type: 0, // 0 for light, 1 for fan, 2 for music device
         brightness: 20, // lux
         color: "#FFFFFF"
     },
@@ -19,8 +19,8 @@ const device = [
         state: 0,
         capacity: 80,
         room_id: 3,
-        type: 0,
-        rpm: 0,
+        type: 1,
+        rpm: 27,
     },
     {
         id: 2,
@@ -31,6 +31,9 @@ const device = [
         capacity: 80,
         room_id: 3,
         type: 2,
+        song: 'Bước qua mùa cô đơn',
+        artist: 'Vũ.',
+        duration: 279, 
         volume: 40 // percent
     },
 ]
