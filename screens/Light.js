@@ -65,7 +65,7 @@ const Home = () => {
             </View>
 
             {/* Color Picker */}
-            <View style={[]}>
+            {/* <View style={[]}>
 				<ColorPicker
 					ref={r => { this.picker = r }}
 					color={this.state.currentColor}
@@ -81,7 +81,7 @@ const Home = () => {
 					discrete={this.state.disc}
 				/>
 				<SomeButton onPress={() => this.picker.revert()} />
-			</View>
+			</View> */}
 
 
             {/* Color Slider */}
