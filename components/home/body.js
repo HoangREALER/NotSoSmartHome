@@ -8,7 +8,7 @@ import { device } from '../../controller/data/devices';
 import Slider from '@react-native-community/slider';
 import MarqueeText from 'react-native-marquee';
 
-const HomeBody = () => {
+const HomeBody = ({ navigation }) => {
 
 
 
@@ -395,7 +395,7 @@ const HomeBody = () => {
                                                             resizeMode="contain"
                                                             style={{
                                                                 height: 30,
-                                                                transform: "rotate(180deg)"
+                                                                transform: [{rotate: '180deg'}]
                                                             }}
                                                         />
                                                     </View>
@@ -483,6 +483,7 @@ const HomeBody = () => {
                             marginBottom: SIZES.padding * 3,
                             ...styles.shadow
                         }}
+                        onPress={() => navigation.navigate("Login")}
                     >
                         <DeviceType item={props.item} />
                     </TouchableOpacity>

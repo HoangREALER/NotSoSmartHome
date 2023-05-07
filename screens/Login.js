@@ -12,7 +12,7 @@ const Login = ({navigation}) => {
     const handleLogin = () => {
         //navigate to home screen
         if (username == "hoangle123" && password == "hoangle123")
-            navigation.navigate("Home")
+            navigation.navigate("HomeTabs")
     }
 
     const forgotPassword = () => {

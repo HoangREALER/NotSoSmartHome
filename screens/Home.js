@@ -3,13 +3,13 @@ import { SafeAreaView, ScrollView, StyleSheet, Text } from "react-native";
 import { COLORS_Light } from "../constants";
 import { HomeHeader, EnergyUsage, HomeBody } from "../components/home";
 
-const Home = () => {
+const Home = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView>
                 <HomeHeader />
                 <EnergyUsage />
-                <HomeBody />
+                <HomeBody navigation={navigation}/>
             </ScrollView>
         </SafeAreaView>
     )
