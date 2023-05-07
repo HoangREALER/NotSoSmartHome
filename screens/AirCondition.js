@@ -78,7 +78,7 @@ const Home = () => {
                 <Text> Temp: {temperature} </Text>
             </View>
             {/* Mode */}
-            <View style={styles.box}>
+            {/* <View style={styles.box}>
                 <View>
                     <Text style={FONTS.h3}>Mode</Text>
                 </View>
@@ -96,7 +96,7 @@ const Home = () => {
                         <Text>Fan</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+            </View> */}
 
             {/* Timer */}
             <View style={styles.box}>
