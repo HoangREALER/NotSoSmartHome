@@ -1,15 +1,11 @@
 import React, {useState} from "react";
-import { ScrollView, SafeAreaView, StyleSheet, View, Text, Switch, Image, TouchableOpacity } from "react-native";
+import { ScrollView, StyleSheet, View, Text, Switch, Image, TouchableOpacity } from "react-native";
 import { COLORS_Light, FONTS } from "../constants";
-import { EnergyUsage } from "../components";
-import { SubHeader, HomeHeader } from "../components/header";
 import { arrow_up_focused, lamp, not_favourite, plus_focused, water } from "../constants/icons";
 import Slider from "@react-native-community/slider";
-import { AirCondition } from ".";
 
 
-
-const Home = () => {
+const AirCondition = ({ navigation }) => {
     // Switch Use state
     const [isEnable, setIsEnable] = useState(true);
 
@@ -25,17 +21,13 @@ const Home = () => {
     }
 
     return (
-        // <SafeAreaView style={styles.container}>
-        //     <Text>hello</Text>
-
-        //     <HomeHeader/>
-        //     <EnergyUsage/>
-        // </SafeAreaView>
 
         <ScrollView style={styles.container}>
             
             <View style={styles.header}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('Home')}
+                >
                     <Image source={arrow_up_focused} style={{transform:[{rotate: '-90deg'}]}}/>
                 </TouchableOpacity>
                 <TouchableOpacity style={{marginLeft: 50, backgroundColor: COLORS_Light.background, borderRadius:20}}>
@@ -78,7 +70,7 @@ const Home = () => {
                 <Text> Temp: {temperature} </Text>
             </View>
             {/* Mode */}
-            {/* <View style={styles.box}>
+            <View style={styles.box}>
                 <View>
                     <Text style={FONTS.h3}>Mode</Text>
                 </View>
@@ -96,7 +88,7 @@ const Home = () => {
                         <Text>Fan</Text>
                     </TouchableOpacity>
                 </View>
-            </View> */}
+            </View>
 
             {/* Timer */}
             <View style={styles.box}>

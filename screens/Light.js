@@ -1,12 +1,10 @@
 import React, {useState} from "react";
 import { ScrollView, SafeAreaView, StyleSheet, View, Text, Switch, Image, TouchableOpacity } from "react-native";
 import { COLORS_Light, FONTS } from "../constants";
-import { EnergyUsage } from "../components";
-import { SubHeader, HomeHeader } from "../components/header";
 import { arrow_up_focused, lamp, not_favourite, plus_focused, water } from "../constants/icons";
 import Slider from "@react-native-community/slider";
-import ColorPicker from "react-native-wheel-color-picker";
-const Home = () => {
+
+const Light = ({ navigation }) => {
 
     const [color, setColor] = useState('#000000');
 
@@ -26,16 +24,11 @@ const Home = () => {
     }
 
     return (
-        // <SafeAreaView style={styles.container}>
-        //     <Text>hello</Text>
-
-        //     <HomeHeader/>
-        //     <EnergyUsage/>
-        // </SafeAreaView>
         <ScrollView style={styles.container}>
-            
             <View style={styles.header}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('Home')}
+                >
                     <Image source={arrow_up_focused} style={{transform:[{rotate: '-90deg'}]}}/>
                 </TouchableOpacity>
                 <TouchableOpacity style={{marginLeft: 50, backgroundColor: COLORS_Light.background, borderRadius:20}}>
@@ -64,27 +57,7 @@ const Home = () => {
                 />
             </View>
 
-            {/* Color Picker */}
-            {/* <View style={[]}>
-				<ColorPicker
-					ref={r => { this.picker = r }}
-					color={this.state.currentColor}
-					swatchesOnly={this.state.swatchesOnly}
-					onColorChange={this.onColorChange}
-					onColorChangeComplete={this.onColorChangeComplete}
-					thumbSize={40}
-					sliderSize={40}
-					noSnap={true}
-					row={false}
-					swatchesLast={this.state.swatchesLast}
-					swatches={this.state.swatchesEnabled}
-					discrete={this.state.disc}
-				/>
-				<SomeButton onPress={() => this.picker.revert()} />
-			</View> */}
 
-
-            {/* Color Slider */}
             <View style={styles.box}>
                 <Text style={{alignSelf:"center"}}>0%</Text>
                 <Slider

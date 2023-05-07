@@ -6,11 +6,8 @@ import { COLORS_Light, SIZES, FONTS, icons } from '../../constants';
 import { rooms } from '../../controller/data/rooms';
 import { device } from '../../controller/data/devices';
 import Slider from '@react-native-community/slider';
-import MarqueeText from 'react-native-marquee';
 
 const HomeBody = ({ navigation }) => {
-
-
 
     const RenderRoomList = (props) => {
         const [selectedRoom, setSelectedRoom] = React.useState(rooms[0])
@@ -470,7 +467,13 @@ const HomeBody = ({ navigation }) => {
                     1: AirCondtionComponent,
                     2: MusicPlayerComponent
                 }
+                const screen = {
+                    0: "Light",
+                    1: "AirCondition",
+                    2: "MusicPlayer"
+                }
                 const DeviceType = typ[props.item.type]
+                const ScreenTyp = screen[props.item.type]
 
                 return (
                     <TouchableOpacity
@@ -483,7 +486,7 @@ const HomeBody = ({ navigation }) => {
                             marginBottom: SIZES.padding * 3,
                             ...styles.shadow
                         }}
-                        onPress={() => navigation.navigate("Login")}
+                        onPress={() => navigation.navigate(ScreenTyp)}
                     >
                         <DeviceType item={props.item} />
                     </TouchableOpacity>
