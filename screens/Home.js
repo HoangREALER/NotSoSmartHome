@@ -1,9 +1,7 @@
-import React, {useState} from "react";
-import { ScrollView, SafeAreaView, StyleSheet, View, Text, Switch, Image, TouchableOpacity } from "react-native";
-import { COLORS_Light, FONTS } from "../constants";
-import { EnergyUsage } from "../components";
-import { SubHeader, HomeHeader } from "../components/header";
-import { arrow_up_focused, lamp, not_favourite, plus_focused, water } from "../constants/icons";
+import React from "react";
+import { SafeAreaView, StyleSheet, Text } from "react-native";
+import { COLORS_Light } from "../constants";
+import { HomeHeader, EnergyUsage, HomeBody } from "../components/home";
 
 
 
@@ -11,10 +9,9 @@ const Home = () => {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Text>hello</Text>
-
             <HomeHeader/>
             <EnergyUsage/>
+            <HomeBody/>
         </SafeAreaView>
        
     )
