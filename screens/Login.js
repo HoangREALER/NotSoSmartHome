@@ -1,9 +1,9 @@
 import React, {useState} from "react";
-import { StyleSheet ,View, Text, Button, TextInput, Image } from "react-native";
+import { StyleSheet ,View, Text, TextInput } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
 import appTheme from "../constants/theme";
-import { login_vector1, login_vector2 } from "../constants/images";
+import { login } from "../controller/data/user";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Login = ({navigation}) => {
     const [username, setUsername] = useState('');
@@ -11,8 +11,20 @@ const Login = ({navigation}) => {
 
     const handleLogin = () => {
         //navigate to home screen
-        if (username == "hoangle123" && password == "hoangle123")
-            navigation.navigate("HomeTabs")
+        login(username)
+        .then((result) => {
+            if (result.status === 401)
+                throw error
+            else if (result.status === 200) {
+                if (password !== result.data.password)
+                    throw "Can't login"
+                AsyncStorage.setItem("UserKey", JSON.stringify(result.data));
+                navigation.navigate("HomeTabs");
+            }
+        })
+        .catch((err) => {
+            console.error(err)
+        })
     }
 
     const forgotPassword = () => {

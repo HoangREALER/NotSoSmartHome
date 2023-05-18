@@ -1,7 +1,9 @@
-import { View, StyleSheet, Image, TouchableOpacity, Text } from "react-native";
+import { View, Image, TouchableOpacity, Text } from "react-native";
+import React, { useState, useEffect } from 'react';
 import UserAvatar from 'react-native-user-avatar';
-import { COLORS_Light, FONTS, icons, images, theme } from "../../constants";
+import { FONTS, images } from "../../constants";
 import { SIZES, } from "../../constants";
+import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 
 
 // Change this later
@@ -9,6 +11,20 @@ const avatar = images.avatar
 
 
 const HomeHeader = () => {
+    const [username, setUsername] = useState(null);
+    const { getItem, setItem } = useAsyncStorage('UserKey');
+
+    const readKeyFromStorage = async () => {
+        let itemStr = await getItem();
+        let item = JSON.parse(itemStr)
+        let username = item.username
+        setUsername(username);
+    };
+    
+    useEffect(() => {
+        readKeyFromStorage();
+    }, []);
+
     return (
         <View style={{ display: "flex", flexDirection: "row", height: 72 }}>
             <View 
@@ -20,7 +36,7 @@ const HomeHeader = () => {
                 }}>
                 <View>
                     <Text style={{color: "#000" , ...FONTS.h3 }}>
-                        Welcome home, Rakim Mayer
+                        Welcome home, {username}
                     </Text>
                 </View>
             </View>

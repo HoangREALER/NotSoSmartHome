@@ -1,17 +1,19 @@
-import React, {useState} from "react";
+import React, { useState, useEffect } from "react";
 import { ScrollView, StyleSheet, View, Text, Switch, Image, TouchableOpacity } from "react-native";
 import { COLORS_Light, FONTS } from "../constants";
 import { arrow_up_focused, lamp, not_favourite, plus_focused, water } from "../constants/icons";
 import Slider from "@react-native-community/slider";
+import { changeState } from "../controller/data/devices";
 
 
-const AirCondition = ({ navigation }) => {
+const AirCondition = ({ route, navigation }) => {
     // Switch Use state
-    const [isEnable, setIsEnable] = useState(true);
-
-    const toggleSwitch = () => {
-        setIsEnable(previousState => !previousState)
-    }
+    let { item } = route.params;
+    const [isEnabled, setIsEnabled] = useState(item.state === 0 ? false : true);
+    const toggleSwitch = (previousState) => {
+        setIsEnabled(previousState)
+        changeState(item.id)
+    };
 
     // Circular Slider
     const [temperature, setTemperature] = useState(18);
@@ -23,36 +25,37 @@ const AirCondition = ({ navigation }) => {
     return (
 
         <ScrollView style={styles.container}>
-            
+
             <View style={styles.header}>
                 <TouchableOpacity
                     onPress={() => navigation.navigate('Home')}
                 >
-                    <Image source={arrow_up_focused} style={{transform:[{rotate: '-90deg'}]}}/>
+                    <Image source={arrow_up_focused} style={{ transform: [{ rotate: '-90deg' }] }} />
                 </TouchableOpacity>
-                <TouchableOpacity style={{marginLeft: 50, backgroundColor: COLORS_Light.background, borderRadius:20}}>
-                    <Image source={lamp} style={{tintColor: COLORS_Light.primary}}/>
+                <TouchableOpacity style={{ marginLeft: 50, backgroundColor: COLORS_Light.background, borderRadius: 20 }}>
+                    <Image source={lamp} style={{ tintColor: COLORS_Light.primary }} />
                 </TouchableOpacity>
-                <View  
-                    style={{        
+                <View
+                    style={{
                         flex: 1,
-                        alignItems:'center',
-                        justifyContent: 'center'}}>
-                    <Text style={FONTS.h2}>Next to the sofa</Text>
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}>
+                    <Text style={FONTS.h2}>{ item.name }</Text>
                     <Text style={FONTS.b5}>Consumes 1KWh</Text>
                 </View>
                 <TouchableOpacity style={{}}>
-                    <Image source={not_favourite}/>
+                    <Image source={not_favourite} />
                 </TouchableOpacity>
             </View>
 
             {/* Slider */}
-            <View style={{alignSelf:'center'}}>
+            <View style={{ alignSelf: 'center' }}>
                 <Switch
-                    trackColor={{false: 'gray', true:COLORS_Light.pink}}
-                    thumbColor={isEnable? 'white': 'white'}
+                    trackColor={{ false: 'gray', true: COLORS_Light.pink }}
+                    thumbColor={isEnabled ? 'white' : 'white'}
                     onValueChange={toggleSwitch}
-                    value={isEnable}
+                    value={isEnabled}
                 />
             </View>
             <View style={styles.box}>
@@ -60,7 +63,7 @@ const AirCondition = ({ navigation }) => {
                     style={styles.slider}
                     minimumValue={18}
                     maximumValue={30}
-                    minimumTrackTintColor= "#D2E0EE"
+                    minimumTrackTintColor="#D2E0EE"
                     maximumTrackTintColor="#CCCCCC"
                     thumbTintColor="#75A7F7"
                     step={1}
@@ -74,17 +77,17 @@ const AirCondition = ({ navigation }) => {
                 <View>
                     <Text style={FONTS.h3}>Mode</Text>
                 </View>
-                <View style={{flexDirection: 'row'}}>
+                <View style={{ flexDirection: 'row' }}>
                     <TouchableOpacity style={styles.mode_wrapper}>
-                        <Image source={water}/>
+                        <Image source={water} />
                         <Text>Dry</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.mode_wrapper}>
-                        <Image source={water}/>
+                        <Image source={water} />
                         <Text>Cold</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.mode_wrapper}>
-                        <Image source={water}/>
+                        <Image source={water} />
                         <Text>Fan</Text>
                     </TouchableOpacity>
                 </View>
@@ -97,50 +100,50 @@ const AirCondition = ({ navigation }) => {
                     <Text style={FONTS.h3}>Timer</Text>
                 </View>
 
-                <TouchableOpacity style={{alignSelf: 'flex-end'}}>
-                    <Image source={plus_focused}/>
+                <TouchableOpacity style={{ alignSelf: 'flex-end' }}>
+                    <Image source={plus_focused} />
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.timer_wrapper}>
-                    <View style={{alignSelf: 'flex-start', marginHorizontal:5,}}>
+                    <View style={{ alignSelf: 'flex-start', marginHorizontal: 5, }}>
                         <Text style={FONTS.h1}>15:30</Text>
                         <Text style={FONTS.body4}>Turn off after __ . __</Text>
                     </View>
                     <Switch
-                        style={{alignSelf: 'flex-end'}}
-                        trackColor={{false: 'gray', true:COLORS_Light.pink}}
-                        thumbColor={isEnable? 'white': 'white'}
+                        style={{ alignSelf: 'flex-end' }}
+                        trackColor={{ false: 'gray', true: COLORS_Light.pink }}
+                        thumbColor={isEnabled ? 'white' : 'white'}
                         onValueChange={toggleSwitch}
-                        value={isEnable}r
+                        value={isEnabled}
                     />
                 </TouchableOpacity>
 
-                
+
                 <TouchableOpacity style={styles.timer_wrapper}>
-                    <View style={{alignSelf: 'flex-start', marginHorizontal:5,}}>
+                    <View style={{ alignSelf: 'flex-start', marginHorizontal: 5, }}>
                         <Text style={FONTS.h1}>15:30</Text>
                         <Text style={FONTS.body4}>Turn off after __ . __</Text>
                     </View>
                     <Switch
-                        style={{alignSelf: 'flex-end'}}
-                        trackColor={{false: 'gray', true:COLORS_Light.pink}}
-                        thumbColor={isEnable? 'white': 'white'}
+                        style={{ alignSelf: 'flex-end' }}
+                        trackColor={{ false: 'gray', true: COLORS_Light.pink }}
+                        thumbColor={isEnabled ? 'white' : 'white'}
                         onValueChange={toggleSwitch}
-                        value={isEnable}r
+                        value={isEnabled}
                     />
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.timer_wrapper}>
-                    <View style={{alignSelf: 'flex-start', marginHorizontal:5,}}>
+                    <View style={{ alignSelf: 'flex-start', marginHorizontal: 5, }}>
                         <Text style={FONTS.h1}>15:30</Text>
                         <Text style={FONTS.body4}>Turn off after __ . __</Text>
                     </View>
                     <Switch
-                        style={{alignSelf: 'flex-end'}}
-                        trackColor={{false: 'gray', true:COLORS_Light.pink}}
-                        thumbColor={isEnable? 'white': 'white'}
+                        style={{ alignSelf: 'flex-end' }}
+                        trackColor={{ false: 'gray', true: COLORS_Light.pink }}
+                        thumbColor={isEnabled ? 'white' : 'white'}
                         onValueChange={toggleSwitch}
-                        value={isEnable}r
+                        value={isEnabled}
                     />
                 </TouchableOpacity>
 
@@ -156,8 +159,8 @@ const styles = StyleSheet.create({
     },
     header: {
         flex: 1,
-        padding:20,
-        alignItems:'center',
+        padding: 20,
+        alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'row',
     },
@@ -167,14 +170,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff', // change this to your desired background color
         shadowColor: '#000',
         shadowOffset: {
-          width: 0,
-          height: 2,
+            width: 0,
+            height: 2,
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
 
-        borderRadius:20,
+        borderRadius: 20,
         marginHorizontal: 20,
         marginVertical: 20,
 
@@ -185,18 +188,18 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff', // change this to your desired background color
         shadowColor: '#000',
         shadowOffset: {
-          width: 0,
-          height: 2,
+            width: 0,
+            height: 2,
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
 
-        borderRadius:20,
+        borderRadius: 20,
         marginHorizontal: 10,
         marginVertical: 5,
 
-        alignItems:'center',
+        alignItems: 'center',
         justifyContent: 'center'
     },
     timer_wrapper: {
@@ -205,18 +208,18 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff', // change this to your desired background color
         shadowColor: '#000',
         shadowOffset: {
-          width: 0,
-          height: 2,
+            width: 0,
+            height: 2,
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
 
-        borderRadius:20,
+        borderRadius: 20,
         marginHorizontal: 10,
         marginVertical: 5,
 
-        alignItems:'center',
+        alignItems: 'center',
         justifyContent: 'center'
     },
     wrapper: {
@@ -225,18 +228,18 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff', // change this to your desired background color
         shadowColor: '#000',
         shadowOffset: {
-          width: 0,
-          height: 2,
+            width: 0,
+            height: 2,
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
 
-        borderRadius:20,
+        borderRadius: 20,
         marginHorizontal: 10,
         marginVertical: 5,
 
-        alignItems:'center',
+        alignItems: 'center',
         justifyContent: 'center'
     },
 
@@ -249,11 +252,11 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowOffset: 3,
         elevation: 1,
-    },  
+    },
     slider: {
         width: 300,
         height: 40,
-      },
+    },
 
 
 })

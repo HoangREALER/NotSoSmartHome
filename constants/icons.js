@@ -18,6 +18,8 @@ export const music = require("../assets/icons/music.png")
 export const play = require("../assets/icons/play.png")
 export const pause = require("../assets/icons/pause.png")
 export const forward = require("../assets/icons/forward.png")
+export const automatic = require("../assets/icons/automatic.png")
+export const fan = require("../assets/icons/fan.png")
 
 export default {
     arrow_up_focused,
@@ -39,5 +41,7 @@ export default {
     music,
     play,
     pause,
-    forward
+    forward,
+    automatic,
+    fan
 }

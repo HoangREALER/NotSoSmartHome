@@ -3,18 +3,20 @@ import { ScrollView, SafeAreaView, StyleSheet, View, Text, Switch, Image, Toucha
 import { COLORS_Light, FONTS } from "../constants";
 import { arrow_up_focused, lamp, not_favourite, plus_focused, water } from "../constants/icons";
 import Slider from "@react-native-community/slider";
+import { changeState } from "../controller/data/devices";
 
-const Light = ({ navigation }) => {
+const Light = ({ route, navigation }) => {
 
     const [color, setColor] = useState('#000000');
 
     
-    // Switch Use state
-    const [isEnable, setIsEnable] = useState(true);
+    let { item } = route.params;
 
-    const toggleSwitch = () => {
-        setIsEnable(previousState => !previousState)
-    }
+    const [isEnable, setIsEnable] = useState(item.state === 0 ? false : true);
+    const toggleSwitch = (previousState) => {
+        setIsEnable(previousState)
+        changeState(item.id)
+    };
 
     /// Slider Use state
     const [lightLevel, setLightLevel] = useState(0);
@@ -39,7 +41,7 @@ const Light = ({ navigation }) => {
                         flex: 1,
                         alignItems:'center',
                         justifyContent: 'center'}}>
-                    <Text style={FONTS.h2}>By the bed</Text>
+                    <Text style={FONTS.h2}>{ item.name }</Text>
                     <Text style={FONTS.b5}>Consumes 1KWh</Text>
                 </View>
                 <TouchableOpacity style={{}}>
@@ -71,7 +73,7 @@ const Light = ({ navigation }) => {
                     value={lightLevel}
                     onValueChange={onValueChange}
                 />
-                <Text style={{alignSelf:"center"}}>100%</Text>
+                <Text style={{alignSelf:"center"}}>{lightLevel} %</Text>
             </View>
 
 

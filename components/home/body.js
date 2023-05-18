@@ -1,17 +1,34 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, FlatList, Image, Switch } from 'react-native';
 import MaskedView from "@react-native-community/masked-view";
+import Slider from '@react-native-community/slider';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COLORS_Light, SIZES, FONTS, icons } from '../../constants';
 
 import { rooms } from '../../controller/data/rooms';
-import { device } from '../../controller/data/devices';
-import Slider from '@react-native-community/slider';
+import { device, getDevices, changeState } from '../../controller/data/devices';
+import { fanOn, fanOff } from '../../controller/api/fan';
+import { lightOn, lightOff } from '../../controller/api/light';
+import { modeOn, modeOff } from '../../controller/api/switch';
+
 
 const HomeBody = ({ navigation }) => {
 
     const RenderRoomList = (props) => {
         const [selectedRoom, setSelectedRoom] = React.useState(rooms[0])
         const [devicesState, setDevices] = React.useState(device.filter(a => a.room_id === 0))
+
+        const initDevices = async () => {
+            let itemStr = await AsyncStorage.getItem('UserKey');
+            let item = JSON.parse(itemStr)
+            let id = item.id
+            getDevices(id)
+        };
+
+        useEffect(() => {
+            initDevices()
+            console.log(1)
+        }, [])
 
         const onSelectRoom = (room) => {
             let deviceList = device.filter(a => a.room_id === room.id)
@@ -22,11 +39,18 @@ const HomeBody = ({ navigation }) => {
 
         const RenderRoomDevice = (props) => {
 
-            const RenderDevice = (props) => {
+            const RenderDevice = ({item}) => {
                 const LampComponent = ({ item }) => {
                     const iconSize = 48;
-                    const [isEnabled, setIsEnabled] = useState(false);
-                    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+                    const [isEnabled, setIsEnabled] = useState(item.state === 0 ? false : true);
+                    const toggleSwitch = (previousState) => {
+                        setIsEnabled(previousState)
+                        changeState(item.id)
+                        if (previousState === true)
+                            lightOn();
+                        else
+                            lightOff();
+                    };
 
                     return (
                         <View style={{ flexDirection: "column" }}>
@@ -108,12 +132,20 @@ const HomeBody = ({ navigation }) => {
 
                 const AirCondtionComponent = ({ item }) => {
                     const iconSize = 48;
-                    const [isEnabled, setIsEnabled] = useState(false);
-                    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-                    const [temperature, setTemperature] = useState(item.rpm);
+                    const [isEnabled, setIsEnabled] = useState(item.state === 0 ? false : true);
+                    const toggleSwitch = (previousState) => {
+                        setIsEnabled(previousState)
+                        changeState(item.id)
+                        if (previousState === true)
+                            fanOn(rpm);
+                        else
+                            fanOff();
+                    };
+
+                    const [rpm, setRPM] = useState(item.rpm);
 
                     const onValueChange = value => {
-                        setTemperature(value);
+                        setRPM(value);
                     }
 
                     return (
@@ -169,13 +201,13 @@ const HomeBody = ({ navigation }) => {
                             <View>
                                 <Slider
                                     style={styles.slider}
-                                    minimumValue={18}
-                                    maximumValue={30}
+                                    minimumValue={0}
+                                    maximumValue={100}
                                     minimumTrackTintColor={COLORS_Light.primary}
                                     maximumTrackTintColor={COLORS_Light.lightConstrast}
                                     thumbTintColor={COLORS_Light.primary}
                                     step={1}
-                                    value={temperature}
+                                    value={rpm}
                                     onValueChange={onValueChange}
                                 />
                             </View>
@@ -193,7 +225,7 @@ const HomeBody = ({ navigation }) => {
                                                 maskElement={
                                                     <View style={styles.maskWrapper}>
                                                         <Image
-                                                            source={icons.temp}
+                                                            source={icons.fan}
                                                             resizeMode="contain"
                                                             style={{
                                                                 height: 30,
@@ -205,7 +237,7 @@ const HomeBody = ({ navigation }) => {
                                                 <View style={{ ...styles.mask, backgroundColor: COLORS_Light.lightConstrast }}></View>
                                             </MaskedView>
                                         </View>
-                                        <Text style={{ ...FONTS.h5, color: COLORS_Light.primary }}>{temperature} ᵒC</Text>
+                                        <Text style={{ ...FONTS.h5, color: COLORS_Light.primary }}>{rpm} %</Text>
 
                                     </View>
 
@@ -226,8 +258,12 @@ const HomeBody = ({ navigation }) => {
 
                 const MusicPlayerComponent = ({ item }) => {
                     const iconSize = 48;
-                    const [isEnabled, setIsEnabled] = useState(false);
-                    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+                    const [isEnabled, setIsEnabled] = useState(item.state === 0 ? false : true);
+                    const toggleSwitch = (previousState) => {
+                        setIsEnabled(previousState)
+                        changeState(item.id)
+                    };
+
                     const duration = item.duration
                     const progressInterval = useRef(null);
                     const [playing, setPlaying] = useState(true);
@@ -462,18 +498,246 @@ const HomeBody = ({ navigation }) => {
                     )
                 }
 
+                const SwitchModeComponent = ({ item }) => {
+                    const iconSize = 48;
+                    const [isEnabled, setIsEnabled] = useState(item.state === 0 ? false : true);
+                    const toggleSwitch = (previousState) => {
+                        setIsEnabled(previousState)
+                        changeState(item.id)
+                        if (previousState === true)
+                            modeOn();
+                        else
+                            modeOff();
+                    };
+
+                    const [temperature, setTemperature] = useState(item.temperature);
+                    const [humidity, setHumidity] = useState(item.humidity);
+                    const [luminosity, setLuminosity] = useState(item.lux);
+
+                    const onTempChange = value => {
+                        setTemperature(value);
+                    }
+
+                    const onHumidChange = value => {
+                        setHumidity(value);
+                    }
+
+                    const onLuxChange = value => {
+                        setLuminosity(value);
+                    }
+
+                    return (
+                        <View style={{ flexDirection: "column" }}>
+                            <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
+                                    <View
+                                        style={{
+                                            padding: SIZES.padding,
+                                            width: iconSize,
+                                            height: iconSize,
+                                            borderRadius: iconSize / 2,
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            marginRight: SIZES.padding,
+                                            backgroundColor: COLORS_Light.lightBlue
+                                        }}
+                                    >
+                                        <MaskedView
+                                            style={styles.maskedView}
+                                            maskElement={
+                                                <View style={styles.maskWrapper}>
+                                                    <Image
+                                                        source={icons.automatic}
+                                                        resizeMode="contain"
+                                                        style={{
+                                                            width: 33,
+                                                            height: 33,
+                                                        }}
+                                                    />
+                                                </View>
+                                            }
+                                        >
+                                            <View style={{ ...styles.mask, backgroundColor: COLORS_Light.primary }}></View>
+                                        </MaskedView>
+                                    </View>
+
+                                    <View style={{ width: 0, flexGrow: 0.5 }}>
+                                        <Text style={{ ...FONTS.h5, flexWrap: "wrap" }}>{item.name}</Text>
+                                    </View>
+
+                                </View>
+
+                                <View>
+                                    <Switch
+                                        trackColor={{ true: COLORS_Light.primary }}
+                                        thumbColor={COLORS_Light.white}
+                                        onValueChange={toggleSwitch}
+                                        value={isEnabled}
+                                    />
+                                </View>
+                            </View>
+                            <View>
+                                <Slider
+                                    style={styles.slider}
+                                    minimumValue={0}
+                                    maximumValue={100}
+                                    minimumTrackTintColor={COLORS_Light.primary}
+                                    maximumTrackTintColor={COLORS_Light.lightConstrast}
+                                    thumbTintColor={COLORS_Light.primary}
+                                    step={1}
+                                    value={temperature}
+                                    onValueChange={onTempChange}
+                                />
+                            </View>
+
+                            <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", flex: 1 }}>
+
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: SIZES.padding / 2 }}>
+                                        <View style={{
+                                            width: 30,
+                                            height: 30,
+                                        }}>
+                                            <MaskedView
+                                                style={styles.maskedView}
+                                                maskElement={
+                                                    <View style={styles.maskWrapper}>
+                                                        <Image
+                                                            source={icons.temp}
+                                                            resizeMode="contain"
+                                                            style={{
+                                                                height: 30,
+                                                            }}
+                                                        />
+                                                    </View>
+                                                }
+                                            >
+                                                <View style={{ ...styles.mask, backgroundColor: COLORS_Light.lightConstrast }}></View>
+                                            </MaskedView>
+                                        </View>
+                                        <Text style={{ ...FONTS.h5, color: COLORS_Light.primary }}>{temperature} °C</Text>
+
+                                    </View>
+                                </View>
+                            </View>
+
+                            <View>
+                                <Slider
+                                    style={styles.slider}
+                                    minimumValue={0}
+                                    maximumValue={100}
+                                    minimumTrackTintColor={COLORS_Light.primary}
+                                    maximumTrackTintColor={COLORS_Light.lightConstrast}
+                                    thumbTintColor={COLORS_Light.primary}
+                                    step={1}
+                                    value={humidity}
+                                    onValueChange={onHumidChange}
+                                />
+                            </View>
+
+                            <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", flex: 1 }}>
+
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: SIZES.padding / 2 }}>
+                                        <View style={{
+                                            width: 30,
+                                            height: 30,
+                                        }}>
+                                            <MaskedView
+                                                style={styles.maskedView}
+                                                maskElement={
+                                                    <View style={styles.maskWrapper}>
+                                                        <Image
+                                                            source={icons.water}
+                                                            resizeMode="contain"
+                                                            style={{
+                                                                height: 30,
+                                                            }}
+                                                        />
+                                                    </View>
+                                                }
+                                            >
+                                                <View style={{ ...styles.mask, backgroundColor: COLORS_Light.lightConstrast }}></View>
+                                            </MaskedView>
+                                        </View>
+                                        <Text style={{ ...FONTS.h5, color: COLORS_Light.primary }}>{humidity} %</Text>
+
+                                    </View>
+                                </View>
+                            </View>
+
+                            <View>
+                                <Slider
+                                    style={styles.slider}
+                                    minimumValue={0}
+                                    maximumValue={100}
+                                    minimumTrackTintColor={COLORS_Light.primary}
+                                    maximumTrackTintColor={COLORS_Light.lightConstrast}
+                                    thumbTintColor={COLORS_Light.primary}
+                                    step={1}
+                                    value={luminosity}
+                                    onValueChange={onLuxChange}
+                                />
+                            </View>
+
+                            <View style={{ flexDirection: 'row' }}>
+                                <View style={{ flexDirection: "row", alignItems: "flex-start", justifyContent: "space-between", flex: 1 }}>
+
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: SIZES.padding / 2 }}>
+                                        <View style={{
+                                            width: 30,
+                                            height: 30,
+                                        }}>
+                                            <MaskedView
+                                                style={styles.maskedView}
+                                                maskElement={
+                                                    <View style={styles.maskWrapper}>
+                                                        <Image
+                                                            source={icons.light_dark}
+                                                            resizeMode="contain"
+                                                            style={{
+                                                                height: 30,
+                                                            }}
+                                                        />
+                                                    </View>
+                                                }
+                                            >
+                                                <View style={{ ...styles.mask, backgroundColor: COLORS_Light.lightConstrast }}></View>
+                                            </MaskedView>
+                                        </View>
+                                        <Text style={{ ...FONTS.h5, color: COLORS_Light.primary }}>{luminosity} lux</Text>
+
+                                    </View>
+
+                                    <View style={{
+                                        paddingHorizontal: SIZES.padding2,
+                                        justifyContent: 'center',
+                                        height: 30,
+                                        borderRadius: 32,
+                                        backgroundColor: COLORS_Light.lightConstrast2
+                                    }}>
+                                        <Text style={{ ...FONTS.h5 }}>{rooms[item.room_id].name}</Text>
+                                    </View>
+                                </View>
+                            </View>
+                        </View>
+                    )
+                }
+
                 const typ = {
                     0: LampComponent,
                     1: AirCondtionComponent,
-                    2: MusicPlayerComponent
+                    2: MusicPlayerComponent,
+                    3: SwitchModeComponent
                 }
                 const screen = {
                     0: "Light",
                     1: "AirCondition",
-                    2: "MusicPlayer"
+                    2: "MusicPlayer",
+                    3: ""
                 }
-                const DeviceType = typ[props.item.type]
-                const ScreenTyp = screen[props.item.type]
+                const DeviceType = typ[item.type]
+                const ScreenTyp = screen[item.type]
 
                 return (
                     <TouchableOpacity
@@ -486,16 +750,18 @@ const HomeBody = ({ navigation }) => {
                             marginBottom: SIZES.padding * 3,
                             ...styles.shadow
                         }}
-                        onPress={() => navigation.navigate(ScreenTyp)}
+                        onPress={() => navigation.navigate(ScreenTyp, {
+                            item
+                        })}
                     >
-                        <DeviceType item={props.item} />
+                        <DeviceType item={item} />
                     </TouchableOpacity>
                 )
             }
 
             return (
                 <View style={styles.container2}>
-                    {devicesState.map(item => <RenderDevice key={item.id} item={item} />)}
+                    {devicesState.map(item => <RenderDevice item={item} key={item.id} />)}
                 </View>
             )
         }

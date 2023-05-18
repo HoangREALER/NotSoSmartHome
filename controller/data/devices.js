@@ -1,29 +1,8 @@
-const device = [
+import instance from "../api"
+
+let device = [
     {
-        id: 0,
-        name: "Bedroom's Lamp",
-        last_start_time: "12:20:48 2023-04-07",
-        used_time: 12345, // secodes
-        state: 1, // 1 for on, 0 for off
-        capacity: 80, // percent
-        room_id: 3,
-        type: 0, // 0 for light, 1 for fan, 2 for music device
-        brightness: 20, // lux
-        color: "#FFFFFF"
-    },
-    {
-        id: 1,
-        name: "Bedroom's Fan",
-        last_start_time: "12:20:48 2023-04-07",
-        used_time: 12345,
-        state: 0,
-        capacity: 80,
-        room_id: 3,
-        type: 1,
-        rpm: 27,
-    },
-    {
-        id: 2,
+        id: 5,
         name: "Bedroom's MP3",
         last_start_time: "19:43:10 2023-04-07",
         used_time: 9812,
@@ -38,6 +17,137 @@ const device = [
     },
 ]
 
+
+const getDevices = async (user_id) => {
+    await instance(`/user/${user_id}/devices`, {
+        method: "GET"
+    })
+    .then(async (res) => {
+        if (res.status === 200) {
+            for (let index = 0; index < res.data.length; index++) {
+                if (res.data[index].dev_type === 'Light')
+                {
+                    let lights = await getLightDetails(res.data[index].id)
+                    let data = {
+                        id: res.data[index].id,
+                        name: res.data[index].name,
+                        state: lights[0].light_state === "00" ? 0 : 1,
+                        room_id: 3,
+                        type: 0,
+                        brightness: lights[0].brightness,
+                        color: lights[0].color
+                    }
+                    device.push(data)
+                }
+                else if (res.data[index].dev_type === 'Fan')
+                {
+                    let fans = await getFanDetails(res.data[index].id)
+                    let data = {
+                        id: res.data[index].id,
+                        name: res.data[index].name,
+                        state: fans[0].fan_state === "OFF" ? 0 : 1,
+                        room_id: 3,
+                        type: 1,
+                        rpm: fans[0].rpm,
+                        temperature: fans[0].temperature
+                    }
+                    device.push(data)
+                }
+                else if (res.data[index].dev_type === 'Switch')
+                {
+                    let sensor = await getSensorDetails();
+                    let switc = await getSwitchDetails(res.data[index].id)
+                    let data = {
+                        id: res.data[index].id,
+                        name: res.data[index].name,
+                        state: switc[0].switch_state === "000" ? 0 : 1,
+                        room_id: 3,
+                        type: 3,
+                        temperature: parseFloat(sensor[0]),
+                        humidity: parseFloat(sensor[1]),
+                        lux: parseFloat(sensor[2]),
+                    }
+                    device.push(data)
+                }
+            }
+            device = device.filter((a, i) => device.findIndex((s) => a.id === s.id) === i)
+            console.log(device)
+        }
+        else if (res.status === 404) {
+            throw "Not Found"
+        }
+    })
+    .catch((err) => {
+        console.log(err)
+    })
+    .finally(() => {
+        
+    })
+}
+
+const getLightDetails = async (dev_id) => {
+    lights = []
+    await instance(`/light`, {
+        method: "GET"
+    })
+    .then((res) => {
+        if (res.status === 200) {
+            lights = res.data.filter(a => a.device_id === dev_id)
+        }
+    })
+    return lights
+}
+
+const getFanDetails = async (dev_id) => {
+    fans = []
+    await instance(`/fan`, {
+        method: "GET"
+    })
+    .then((res) => {
+        if (res.status === 200) {
+            fans = res.data.filter(a => a.device_id === dev_id)
+        }
+    })
+    return fans
+}
+
+const getSensorDetails = async () => {
+    ret = []
+    await instance(`/sensor`, {
+        method: "GET"
+    })
+    .then((res) => {
+        if (res.status === 200) {
+            ret = res.data
+        }
+    })
+    return ret
+}
+
+const getSwitchDetails = async (dev_id) => {
+    ret = []
+    await instance(`/mode`, {
+        method: "GET"
+    })
+    .then((res) => {
+        if (res.status === 200) {
+            ret = res.data.filter(a => a.device_id === dev_id)
+        }
+    })
+    return ret
+}
+
+const changeState = (id) => {
+    const obj = device.filter(a => a.id === id)[0]
+    if (obj.state === 0) {
+        obj.state = 1
+    } else {
+        obj.state = 0
+    }
+}
+
 export {
-    device
+    device,
+    changeState,
+    getDevices
 };
