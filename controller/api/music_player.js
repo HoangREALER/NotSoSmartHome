@@ -1,8 +1,8 @@
 import instance from ".";
 
-const modeOn = async (speed) => {
+const musicOn = async (speed) => {
     ret = []
-    await instance(`/mode/on`, {
+    await instance(`/music/on`, {
         method: "GET",
         params: {
             speed: speed
@@ -11,12 +11,12 @@ const modeOn = async (speed) => {
     .then((res) => {
         if (res.status === 200) {
             if (res.data.includes('on'))
-                console.log(`Mode turned to manual`)
+                console.log(`music turned on`)
             else
-                throw 'Mode turned to manual failed'
+                throw 'music turn on failed'
         }
         else {
-            throw 'Mode turned to manual failed'
+            throw 'music turn on failed'
         }
     })
     .catch((err) => {
@@ -24,20 +24,20 @@ const modeOn = async (speed) => {
     })
 }
 
-const modeOff = async () => {
+const musicOff = async () => {
     ret = []
-    await instance(`/mode/off`, {
+    await instance(`/music/off`, {
         method: "GET",
     })
     .then((res) => {
         if (res.status === 200) {
             if (res.data.includes('off'))
-                console.log(`Mode turned to auto`)
+                console.log(`music turned off`)
             else
-                throw 'Mode turned to auto failed'
+                throw 'music turn off failed'
         }
         else {
-            throw 'Mode turned to auto failed'
+            throw 'music turn off failed'
         }
     })
     .catch((err) => {
@@ -46,6 +46,6 @@ const modeOff = async () => {
 }
 
 export {
-    modeOn,
-    modeOff
+    musicOn,
+    musicOff
 }

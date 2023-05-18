@@ -10,7 +10,7 @@ const lightOn = async (speed) => {
     })
     .then((res) => {
         if (res.status === 200) {
-            if (res.data.includes('testing'))
+            if (res.data.includes('on'))
                 console.log(`Light turned on`)
             else
                 throw 'Light turn on failed'
@@ -31,7 +31,7 @@ const lightOff = async () => {
     })
     .then((res) => {
         if (res.status === 200) {
-            if (res.data.includes('testing'))
+            if (res.data.includes('off'))
                 console.log(`Light turned off`)
             else
                 throw 'Light turn off failed'

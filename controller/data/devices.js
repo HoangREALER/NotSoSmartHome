@@ -1,20 +1,20 @@
 import instance from "../api"
 
 let device = [
-    {
-        id: 5,
-        name: "Bedroom's MP3",
-        last_start_time: "19:43:10 2023-04-07",
-        used_time: 9812,
-        state: 1,
-        capacity: 80,
-        room_id: 3,
-        type: 2,
-        song: 'Bước qua mùa cô đơn',
-        artist: 'Vũ.',
-        duration: 279, 
-        volume: 40 // percent
-    },
+    // {
+    //     id: 5,
+    //     name: "Bedroom's MP3",
+    //     last_start_time: "19:43:10 2023-04-07",
+    //     used_time: 9812,
+    //     state: 1,
+    //     capacity: 80,
+    //     room_id: 3,
+    //     type: 2,
+    //     song: 'Bước qua mùa cô đơn',
+    //     artist: 'Vũ.',
+    //     duration: 279, 
+    //     volume: 40 // percent
+    // },
 ]
 
 
@@ -50,6 +50,22 @@ const getDevices = async (user_id) => {
                         type: 1,
                         rpm: fans[0].rpm,
                         temperature: fans[0].temperature
+                    }
+                    device.push(data)
+                }
+                else if (res.data[index].dev_type === 'MusicPlayer')
+                {
+                    let music_player = await getMusicPlayerDetails(res.data[index].id)
+                    let data = {
+                        id: res.data[index].id,
+                        name: res.data[index].name,
+                        state: music_player[0].music_player_state === "0" ? 0 : 1,
+                        room_id: 3,
+                        type: 2,
+                        song: 'Bước qua mùa cô đơn',
+                        artist: 'Vũ.',
+                        duration: 279, 
+                        volume: 40
                     }
                     device.push(data)
                 }
@@ -119,6 +135,19 @@ const getSensorDetails = async () => {
     .then((res) => {
         if (res.status === 200) {
             ret = res.data
+        }
+    })
+    return ret
+}
+
+const getMusicPlayerDetails = async (dev_id) => {
+    ret = []
+    await instance(`/music_player`, {
+        method: "GET"
+    })
+    .then((res) => {
+        if (res.status === 200) {
+            ret = res.data.filter(a => a.device_id === dev_id)
         }
     })
     return ret

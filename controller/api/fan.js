@@ -10,7 +10,7 @@ const fanOn = async (speed) => {
     })
     .then((res) => {
         if (res.status === 200) {
-            if (res.data.includes('testing'))
+            if (res.data.includes('on'))
                 console.log(`Fan turned on, speed = ${speed} %`)
             else
                 throw 'Fan turn on failed'
@@ -31,7 +31,7 @@ const fanOff = async () => {
     })
     .then((res) => {
         if (res.status === 200) {
-            if (res.data.includes('testing'))
+            if (res.data.includes('off'))
                 console.log(`Fan turned off`)
             else
                 throw 'Fan turn off failed'

@@ -9,6 +9,7 @@ import { rooms } from '../../controller/data/rooms';
 import { device, getDevices, changeState } from '../../controller/data/devices';
 import { fanOn, fanOff } from '../../controller/api/fan';
 import { lightOn, lightOff } from '../../controller/api/light';
+import { musicOn, musicOff } from '../../controller/api/music_player';
 import { modeOn, modeOff } from '../../controller/api/switch';
 
 
@@ -262,6 +263,10 @@ const HomeBody = ({ navigation }) => {
                     const toggleSwitch = (previousState) => {
                         setIsEnabled(previousState)
                         changeState(item.id)
+                        if (previousState === true)
+                            musicOn();
+                        else
+                            musicOff();
                     };
 
                     const duration = item.duration
